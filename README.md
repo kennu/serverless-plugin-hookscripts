@@ -32,7 +32,7 @@ at https://github.com/serverless/serverless/tree/master/lib/actions.
 The data in event.options is made available to the shell scripts in two ways:
 
 * As command line arguments in the form of: --region regionName
-* As environment variables in the from of: SLS_HOOK_REGION=regionName
+* As environment variables in the form of: SLS_HOOK_REGION=regionName
 
 Simple data types (strings and numbers) are passed on as they are.
 Complex data types (objects, arrays, etc) are encoded in JSON format.
