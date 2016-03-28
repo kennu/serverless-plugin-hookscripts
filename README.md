@@ -23,3 +23,6 @@ Use the "hookscripts create" command to create sample hook scripts in the *s-hoo
 folder of your project root.
 
 To enable a hook, remove the ".sample" extension of the generated script.
+
+To understand all the hooks, you may need to refer to the Serverless source code
+at https://github.com/serverless/serverless/tree/master/lib/actions.
