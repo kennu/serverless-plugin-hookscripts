@@ -59,9 +59,10 @@ module.exports = function(S) {
         var sampleScriptName = scriptName + '.sample';
         var scriptPath = path.join(hooksPath, scriptName);
         var sampleScriptPath = path.join(hooksPath, sampleScriptName);
-        var content = '#!/bin/sh\n# Serverless ' + key + ' hook script.\n# To enable this hook , rename this file to "' + scriptName + '".\necho "Hookscript ' + scriptName + ' running."\n';
+        var content = '#!/bin/sh\n# Serverless ' + key + ' hook script.\n# To enable this hook , rename this file to "' + scriptName + '".\necho "Hookscript: ' + scriptName + ' $*"\n';
         if (!fs.existsSync(scriptPath) && !fs.existsSync(sampleScriptPath)) {
           SCli.log('Creating s-hooks/' + sampleScriptName);
+          numCreated += 1;
           try {
             fs.writeFileSync(sampleScriptPath, content, {mode:0o777, flag:'wx'});
           } catch (err) {
@@ -71,6 +72,7 @@ module.exports = function(S) {
       });
       if (numCreated) {
         SCli.log('Note: You can freely delete any of the created sample scripts at any time.');
+        SCli.log('Note: You may want to add s-hooks/*.sample to .gitignore.');
       } else {
         SCli.log('All scripts already exist in s-hooks.');
       }
@@ -101,7 +103,20 @@ module.exports = function(S) {
       var scriptName = this.getScriptName(hook);
       var scriptPath = path.join(hooksPath, scriptName);
       if (fs.existsSync(scriptPath)) {
-        if (exec(scriptPath, { silent: false }).code !== 0) {
+        //console.log('Exec hook', hook, evt);
+        var options = '';
+        var env = {};
+        Object.keys(process.env).map(envName => {
+          env[envName] = process.env[envName];
+        });
+        if (evt.options) {
+          Object.keys(evt.options).map(paramName => {
+            var paramValue = evt.options[paramName];
+            options += ' --' + paramName + ' ' + JSON.stringify(paramValue); // ensure quoted
+            env['SLS_HOOK_' + paramName.toUpperCase()] = typeof paramValue == 'string' || typeof paramValue == 'number' ? paramValue : paramValue === null ? '' : JSON.stringify(paramValue);
+          });
+        }
+        if (exec(scriptPath + options, { silent: false, env: env }).code !== 0) {
           throw new SError(`Error executing hook script ${scriptName}`, SError.errorCodes.UNKNOWN);
         }
       }
