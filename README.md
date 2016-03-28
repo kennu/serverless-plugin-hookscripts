@@ -26,3 +26,13 @@ To enable a hook, remove the ".sample" extension of the generated script.
 
 To understand all the hooks, you may need to refer to the Serverless source code
 at https://github.com/serverless/serverless/tree/master/lib/actions.
+
+## Event data
+
+The data in event.options is made available to the shell scripts in two ways:
+
+* As command line arguments in the form of: --region <region>
+* As environment variables in the from of: SLS_HOOK_REGION=<region>
+
+Simple data types (strings and numbers) are passed on as they are.
+Complex data types (objects, arrays, etc) are encoded in JSON format.
