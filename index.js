@@ -47,6 +47,8 @@ module.exports = function(S) {
     createHookscripts(evt) {
       var project = S.getProject();
       var hooksPath = path.join(project.getRootPath(), 's-hooks');
+      // Fixes OSX issue with spaces inside paths
+      hooksPath = hooksPath.replace(/ /g, '\\ ');
       try {
         fs.mkdirSync(hooksPath);
       } catch (err) {
@@ -108,6 +110,8 @@ module.exports = function(S) {
     runHook(hook, evt) {
       var project = S.getProject();
       var hooksPath = path.join(project.getRootPath(), 's-hooks');
+      // Fixes OSX issue with spaces inside paths
+      hooksPath = hooksPath.replace(/ /g, '\\ ');
       var scriptName = this.getScriptName(hook);
       var scriptPath = path.join(hooksPath, scriptName);
 
