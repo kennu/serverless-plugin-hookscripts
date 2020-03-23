@@ -1,4 +1,6 @@
-# Hook scripts plugin for Serverless
+# Please note that this is an old project for Serverless 0.x
+
+## Hook scripts plugin for Serverless
 Kenneth Falck <kennu@iki.fi> 2016
 
 This plugin lets you easily create shell or node script hooks that are run whenever
